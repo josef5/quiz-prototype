@@ -66,6 +66,7 @@ const totalQuestions = questionsData.length;
 let answeredCorrectly: Question[] = [];
 let currentQuestion: Question | undefined;
 let handleAnswer: (value?: unknown) => void;
+let attempts = 0;
 
 let $questionContainer: Element;
 let $answersContainer: Element;
@@ -94,9 +95,8 @@ function shuffleArray<T>(array: T[]): T[] {
   return array;
 }
 
-const renderQuestion = (question: Question) => {
-  // console.log("question :", question);
-  $questionContainer.textContent = question.text;
+const renderQuestion = (question: Question, attempts: number) => {
+  $questionContainer.textContent = `${attempts + 1}. ${question.text}`;
 };
 
 const getAnswerOptions = (
@@ -123,7 +123,6 @@ const renderButtons = (answers: string[]) => {
     const button = document.createElement("button");
     button.textContent = answers[i];
     button.onclick = () => {
-      // console.log(answers[i]);
       handleAnswer(answers[i]);
     };
 
@@ -138,11 +137,14 @@ const getResponse = async () =>
     handleAnswer = resolve;
   });
 
-const renderScore = (correctAnswers: number, totalQuestions: number) => {
+const renderScore = (
+  correctAnswers: number,
+  totalQuestions: number,
+  attempts: number
+) => {
   const scoreText = `${correctAnswers}/${totalQuestions}`;
-  // console.log(scoreText);
 
-  $scoreContainer.textContent = scoreText;
+  $scoreContainer.textContent = `correct answers ${scoreText} attempts ${attempts}`;
 };
 
 const renderCorrect = (correct: Boolean) => {
@@ -154,32 +156,26 @@ const renderCorrect = (correct: Boolean) => {
 };
 
 const renderGameEnd = () => {
-  // console.log(`Game end.`);
   $questionContainer.innerHTML = "Finished";
 
   const button = document.createElement("button");
   button.textContent = "Play Again";
   button.onclick = () => start();
-  // $answersContainer.innerHTML = "";
   $answersContainer.replaceChildren(button);
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const loopStart = async () => {
-  // console.log("loopStart");
-
   currentQuestion = getNextQuestion(unansweredQuestions);
-  // console.log("unansweredQuestions :", unansweredQuestions);
-  // console.log("currentQuestion :", currentQuestion);
 
   if (!currentQuestion) return;
 
   const answerOptions = getAnswerOptions(currentQuestion, questions);
 
-  renderQuestion(currentQuestion);
+  renderQuestion(currentQuestion, attempts);
   renderButtons(answerOptions);
-  renderScore(answeredCorrectly.length, totalQuestions);
+  renderScore(answeredCorrectly.length, totalQuestions, attempts);
 
   const answer = await getResponse();
 
@@ -188,9 +184,9 @@ const loopStart = async () => {
     return;
   }
 
-  if (answer === currentQuestion.answer) {
-    // console.log("correct :", answer);
+  attempts++;
 
+  if (answer === currentQuestion.answer) {
     answeredCorrectly.push(currentQuestion);
     renderCorrect(true);
   } else {
@@ -198,7 +194,7 @@ const loopStart = async () => {
     renderCorrect(false);
   }
 
-  renderScore(answeredCorrectly.length, totalQuestions);
+  renderScore(answeredCorrectly.length, totalQuestions, attempts);
 
   await sleep(2000);
 
@@ -212,8 +208,6 @@ const loopStart = async () => {
 const listenForEscape = () => {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      // handle escape key press
-
       handleAnswer("escape");
     }
   });
@@ -227,18 +221,16 @@ const init = () => {
   questions = getQuestions(questionsData);
   unansweredQuestions = shuffleArray([...questions]);
   answeredCorrectly = [];
+  attempts = 0;
 
   listenForEscape();
 };
 
 const start = () => {
   init();
-  renderScore(answeredCorrectly.length, totalQuestions);
   loopStart();
 };
 
 window.onload = () => {
-  // console.log("window loaded");
-
   start();
 };
