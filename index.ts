@@ -95,7 +95,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 const renderQuestion = (question: Question) => {
-  console.log("question :", question);
+  // console.log("question :", question);
   $questionContainer.textContent = question.text;
 };
 
@@ -120,7 +120,7 @@ const renderButtons = (answers: string[]) => {
     const button = document.createElement("button");
     button.textContent = answers[i];
     button.onclick = () => {
-      console.log(answers[i]);
+      // console.log(answers[i]);
       handleAnswer(answers[i]);
     };
 
@@ -137,7 +137,7 @@ const getAnswer = async () =>
 
 const renderScore = (correctAnswers: number, totalQuestions: number) => {
   const scoreText = `${correctAnswers}/${totalQuestions}`;
-  console.log(scoreText);
+  // console.log(scoreText);
 
   $scoreContainer.textContent = scoreText;
 };
@@ -149,11 +149,11 @@ const gameEnd = () => {
 };
 
 const loopStart = async () => {
-  console.log("loopStart");
+  // console.log("loopStart");
 
   currentQuestion = getNextQuestion(unansweredQuestions);
-  console.log("unansweredQuestions :", unansweredQuestions);
-  console.log("currentQuestion :", currentQuestion);
+  // console.log("unansweredQuestions :", unansweredQuestions);
+  // console.log("currentQuestion :", currentQuestion);
 
   if (!currentQuestion) return;
 
@@ -164,10 +164,10 @@ const loopStart = async () => {
   renderScore(answeredCorrectly.length, totalQuestions);
 
   const answer = await getAnswer();
-  console.log("answer :", answer);
 
   if (answer === currentQuestion.answer) {
-    console.log("correct :", answer);
+    // console.log("correct :", answer);
+
     answeredCorrectly.push(currentQuestion);
   } else {
     unansweredQuestions.push(currentQuestion);
