@@ -63,7 +63,7 @@ const questionsData: Capital[] = [
 let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
 const totalQuestions = questionsData.length;
-const answeredCorrectly: Question[] = [];
+let answeredCorrectly: Question[] = [];
 let currentQuestion: Question | undefined;
 let handleAnswer: (value?: unknown) => void;
 
@@ -142,11 +142,26 @@ const renderScore = (correctAnswers: number, totalQuestions: number) => {
   $scoreContainer.textContent = scoreText;
 };
 
-const gameEnd = () => {
-  console.log(`Game end.`);
-  $questionContainer.innerHTML = "Finished";
-  $answersContainer.innerHTML = "";
+const renderCorrect = (correct: Boolean) => {
+  if (correct) {
+    $answersContainer.innerHTML = "Right answer!";
+  } else {
+    $answersContainer.innerHTML = "Wrong answer!";
+  }
 };
+
+const renderGameEnd = () => {
+  // console.log(`Game end.`);
+  $questionContainer.innerHTML = "Finished";
+
+  const button = document.createElement("button");
+  button.textContent = "Play Again";
+  button.onclick = () => start();
+  // $answersContainer.innerHTML = "";
+  $answersContainer.replaceChildren(button);
+};
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const loopStart = async () => {
   // console.log("loopStart");
@@ -169,28 +184,41 @@ const loopStart = async () => {
     // console.log("correct :", answer);
 
     answeredCorrectly.push(currentQuestion);
+    renderCorrect(true);
   } else {
     unansweredQuestions.push(currentQuestion);
+    renderCorrect(false);
   }
 
   renderScore(answeredCorrectly.length, totalQuestions);
 
+  await sleep(2000);
+
   if (unansweredQuestions.length > 0) {
     loopStart();
   } else {
-    gameEnd();
+    renderGameEnd();
   }
 };
 
-window.onload = () => {
-  console.log("window loaded");
-
+const init = () => {
   $questionContainer = document.querySelector("#question-container")!;
   $answersContainer = document.querySelector("#answers-container")!;
   $scoreContainer = document.querySelector("#score-container")!;
 
   questions = getQuestions(questionsData);
   unansweredQuestions = shuffleArray([...questions]);
+  answeredCorrectly = [];
+};
 
+const start = () => {
+  init();
+  renderScore(answeredCorrectly.length, totalQuestions);
   loopStart();
+};
+
+window.onload = () => {
+  // console.log("window loaded");
+
+  start();
 };
