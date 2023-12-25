@@ -65,7 +65,6 @@ const questionsData: Capital[] = [
 
 let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
-const totalQuestions = questionsData.length;
 let answeredCorrectly: Question[] = [];
 let currentQuestion: Question | undefined;
 let handleAnswer: (value?: unknown) => void;
@@ -187,7 +186,7 @@ const loopStart = async () => {
 
   renderQuestion(currentQuestion, attempts);
   renderButtons(answerOptions);
-  renderScore(answeredCorrectly.length, totalQuestions, attempts);
+  renderScore(answeredCorrectly.length, questions.length, attempts);
 
   const answer = await getResponse();
 
@@ -206,7 +205,7 @@ const loopStart = async () => {
     renderCorrect(false);
   }
 
-  renderScore(answeredCorrectly.length, totalQuestions, attempts);
+  renderScore(answeredCorrectly.length, questions.length, attempts);
 
   await sleep(2000);
 
