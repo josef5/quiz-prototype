@@ -178,7 +178,10 @@ const init = () => {
   $answersContainer = document.querySelector("#answers-container")!;
   $scoreContainer = document.querySelector("#score-container")!;
 
-  questions = getQuestions(questionsData);
+  questions = getQuestions(
+    data.filter((capital) => capital.continent === "Africa")
+  );
+
   unansweredQuestions = shuffleArray([...questions]);
   answeredCorrectly = [];
   attempts = 0;
