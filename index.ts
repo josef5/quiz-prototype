@@ -1,3 +1,6 @@
+import { data } from "./data.js";
+console.log("data :", data);
+
 type Capital = {
   city: string;
   country: string;
