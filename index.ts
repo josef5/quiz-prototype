@@ -95,10 +95,6 @@ function shuffleArray<T>(array: T[]): T[] {
   return array;
 }
 
-const renderQuestion = (question: Question, attempts: number) => {
-  $questionContainer.textContent = `${attempts + 1}. ${question.text}`;
-};
-
 const getAnswerOptions = (
   currentQuestion: Question,
   allQuestions: Question[]
@@ -116,6 +112,26 @@ const getAnswerOptions = (
   return shuffleArray(answers);
 };
 
+const getResponse = async () =>
+  new Promise((resolve, reject) => {
+    handleAnswer = resolve;
+  });
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const renderStart = () => {
+  $questionContainer.textContent = "Ready?";
+  const button = document.createElement("button");
+  button.textContent = "Play";
+  button.onclick = () => start();
+
+  $answersContainer.append(button);
+};
+
+const renderQuestion = (question: Question, attempts: number) => {
+  $questionContainer.textContent = `${attempts + 1}. ${question.text}`;
+};
+
 const renderButtons = (answers: string[]) => {
   const buttons = document.createDocumentFragment();
 
@@ -131,11 +147,6 @@ const renderButtons = (answers: string[]) => {
 
   $answersContainer.replaceChildren(buttons);
 };
-
-const getResponse = async () =>
-  new Promise((resolve, reject) => {
-    handleAnswer = resolve;
-  });
 
 const renderScore = (
   correctAnswers: number,
@@ -163,8 +174,6 @@ const renderGameEnd = () => {
   button.onclick = () => start();
   $answersContainer.replaceChildren(button);
 };
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const loopStart = async () => {
   currentQuestion = getNextQuestion(unansweredQuestions);
@@ -232,5 +241,7 @@ const start = () => {
 };
 
 window.onload = () => {
-  start();
+  // start();
+  init();
+  renderStart();
 };
