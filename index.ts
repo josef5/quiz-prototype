@@ -177,9 +177,11 @@ const init = () => {
   $questionContainer = document.querySelector("#question-container")!;
   $answersContainer = document.querySelector("#answers-container")!;
   $scoreContainer = document.querySelector("#score-container")!;
+};
 
+const resetState = () => {
   questions = getQuestions(
-    data.filter((capital) => capital.continent === "Africa")
+    data.filter((capital) => capital.continent === "Europe").slice(0, 3)
   );
 
   unansweredQuestions = shuffleArray([...questions]);
@@ -188,12 +190,13 @@ const init = () => {
 };
 
 const start = () => {
-  init();
+  resetState();
   loopStart();
 };
 
 window.onload = () => {
   init();
+  resetState();
   listenForEscape();
   renderStart();
 };
