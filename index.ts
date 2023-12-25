@@ -99,7 +99,10 @@ const renderQuestion = (question: Question) => {
   $questionContainer.textContent = question.text;
 };
 
-const getAnswers = (currentQuestion: Question, allQuestions: Question[]) => {
+const getAnswerOptions = (
+  currentQuestion: Question,
+  allQuestions: Question[]
+) => {
   const correctAnswer = currentQuestion.answer;
 
   const wrongAnswers = shuffleArray(
@@ -130,7 +133,7 @@ const renderButtons = (answers: string[]) => {
   $answersContainer.replaceChildren(buttons);
 };
 
-const getAnswer = async () =>
+const getResponse = async () =>
   new Promise((resolve, reject) => {
     handleAnswer = resolve;
   });
@@ -172,13 +175,18 @@ const loopStart = async () => {
 
   if (!currentQuestion) return;
 
-  const answers = getAnswers(currentQuestion, questions);
+  const answerOptions = getAnswerOptions(currentQuestion, questions);
 
   renderQuestion(currentQuestion);
-  renderButtons(answers);
+  renderButtons(answerOptions);
   renderScore(answeredCorrectly.length, totalQuestions);
 
-  const answer = await getAnswer();
+  const answer = await getResponse();
+
+  if (answer === "escape") {
+    renderGameEnd();
+    return;
+  }
 
   if (answer === currentQuestion.answer) {
     // console.log("correct :", answer);
@@ -201,6 +209,16 @@ const loopStart = async () => {
   }
 };
 
+const listenForEscape = () => {
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      // handle escape key press
+
+      handleAnswer("escape");
+    }
+  });
+};
+
 const init = () => {
   $questionContainer = document.querySelector("#question-container")!;
   $answersContainer = document.querySelector("#answers-container")!;
@@ -209,6 +227,8 @@ const init = () => {
   questions = getQuestions(questionsData);
   unansweredQuestions = shuffleArray([...questions]);
   answeredCorrectly = [];
+
+  listenForEscape();
 };
 
 const start = () => {
