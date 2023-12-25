@@ -1,5 +1,4 @@
 import { data } from "./data.js";
-console.log("data :", data);
 
 type Capital = {
   city: string;
@@ -12,56 +11,6 @@ type Question = {
   text: string;
   options: string[];
 };
-
-const questionsData: Capital[] = [
-  // { city: "", country: "", continent: "Europe" },
-  /* { city: "Madrid", country: "Spain", continent: "Europe" },
-  { city: "Brussels", country: "Belgium", continent: "Europe" },
-  { city: "Lisbon", country: "Portugal", continent: "Europe" },
-  { city: "Oslo", country: "Norway", continent: "Europe" },
-  { city: "Paris", country: "France", continent: "Europe" },
-  { city: "Berlin", country: "Germany", continent: "Europe" },
-  { city: "Rome", country: "Italy", continent: "Europe" },
-  { city: "Athens", country: "Greece", continent: "Europe" },
-  { city: "Amsterdam", country: "Netherlands", continent: "Europe" },
-  { city: "Vienna", country: "Austria", continent: "Europe" },
-  { city: "Stockholm", country: "Sweden", continent: "Europe" },
-  { city: "Copenhagen", country: "Denmark", continent: "Europe" },
-  { city: "Helsinki", country: "Finland", continent: "Europe" },
-  { city: "Tallinn", country: "Estonia", continent: "Europe" },
-  { city: "Riga", country: "Latvia", continent: "Europe" },
-  { city: "Vilnius", country: "Lithuania", continent: "Europe" },
-  { city: "Warsaw", country: "Poland", continent: "Europe" },
-  { city: "Budapest", country: "Hungary", continent: "Europe" },
-  { city: "Prague", country: "Czech Republic", continent: "Europe" },
-  { city: "Bratislava", country: "Slovakia", continent: "Europe" },
-  { city: "Ljubljana", country: "Slovenia", continent: "Europe" },
-  { city: "Zagreb", country: "Croatia", continent: "Europe" },
-  { city: "Sarajevo", country: "Bosnia and Herzegovina", continent: "Europe" },
-  { city: "Podgorica", country: "Montenegro", continent: "Europe" },
-  { city: "Pristina", country: "Kosovo", continent: "Europe" },
-  { city: "Skopje", country: "North Macedonia", continent: "Europe" },
-  { city: "Tirana", country: "Albania", continent: "Europe" },
-  { city: "Belgrade", country: "Serbia", continent: "Europe" },
-  { city: "Chisinau", country: "Moldova", continent: "Europe" },
-  { city: "Bucharest", country: "Romania", continent: "Europe" },
-  { city: "Sofia", country: "Bulgaria", continent: "Europe" },
-  { city: "Nicosia", country: "Cyprus", continent: "Europe" }, */
-
-  { city: "Buenos Aires", country: "Argentina", continent: "South America" },
-  { city: "Santiago", country: "Chile", continent: "South America" },
-  { city: "Lima", country: "Peru", continent: "South America" },
-  { city: "Brasília", country: "Brazil", continent: "South America" },
-  { city: "Montevideo", country: "Uruguay", continent: "South America" },
-  { city: "Asunción", country: "Paraguay", continent: "South America" },
-  { city: "Quito", country: "Ecuador", continent: "South America" },
-  { city: "La Paz", country: "Bolivia", continent: "South America" },
-  { city: "Bogotá", country: "Colombia", continent: "South America" },
-  { city: "Caracas", country: "Venezuela", continent: "South America" },
-  { city: "Georgetown", country: "Guyana", continent: "South America" },
-  { city: "Paramaribo", country: "Suriname", continent: "South America" },
-  { city: "Cayenne", country: "French Guiana", continent: "South America" },
-];
 
 let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
@@ -233,8 +182,6 @@ const init = () => {
   unansweredQuestions = shuffleArray([...questions]);
   answeredCorrectly = [];
   attempts = 0;
-
-  listenForEscape();
 };
 
 const start = () => {
@@ -243,7 +190,7 @@ const start = () => {
 };
 
 window.onload = () => {
-  // start();
   init();
+  listenForEscape();
   renderStart();
 };
