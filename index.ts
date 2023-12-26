@@ -9,19 +9,31 @@ type Capital = {
 type Question = {
   answer: string;
   text: string;
-  options: string[];
+  data: Capital;
+};
+
+type AnswerData = {
+  correct: Capital[];
+  incorrect: Capital[];
+  totalQuestions: number;
+  attempts: number;
 };
 
 let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
-let answeredCorrectly: Question[] = [];
+let answerData: AnswerData = {
+  correct: [],
+  incorrect: [],
+  totalQuestions: 0,
+  attempts: 0,
+};
 let currentQuestion: Question | undefined;
 let handleAnswer: (value?: unknown) => void;
-let attempts = 0;
 
 let $questionContainer: Element;
 let $answersContainer: Element;
 let $scoreContainer: Element;
+let $dataContainer: Element;
 
 const getNextQuestion = (array: Question[]) => {
   return array.shift();
@@ -31,6 +43,7 @@ const getQuestion = (data: Capital) => {
   return {
     text: `What is the capital of ${data.country}?`,
     answer: data.city,
+    data,
   } as Question;
 };
 
@@ -99,12 +112,9 @@ const renderButtons = (answers: string[]) => {
   $answersContainer.replaceChildren(buttons);
 };
 
-const renderScore = (
-  correctAnswers: number,
-  totalQuestions: number,
-  attempts: number
-) => {
-  const scoreText = `${correctAnswers}/${totalQuestions}`;
+const renderScore = (answerData: AnswerData) => {
+  const { correct, totalQuestions, attempts } = answerData;
+  const scoreText = `${correct.length}/${totalQuestions}`;
 
   $scoreContainer.textContent = `correct answers ${scoreText} attempts ${attempts}`;
   $dataContainer.textContent = JSON.stringify(answerData, null, 2);
@@ -122,7 +132,7 @@ const renderGameEnd = () => {
   $questionContainer.innerHTML = "Finished";
 
   const button = document.createElement("button");
-  button.textContent = "Play Again";
+  button.textContent = "Play again";
   button.onclick = () => start();
   $answersContainer.replaceChildren(button);
 };
@@ -134,9 +144,9 @@ const loopStart = async () => {
 
   const answerOptions = getAnswerOptions(currentQuestion, questions);
 
-  renderQuestion(currentQuestion, attempts);
+  renderQuestion(currentQuestion, answerData.attempts);
   renderButtons(answerOptions);
-  renderScore(answeredCorrectly.length, questions.length, attempts);
+  renderScore(answerData);
 
   const answer = await getResponse();
 
@@ -145,17 +155,20 @@ const loopStart = async () => {
     return;
   }
 
-  attempts++;
+  answerData.attempts++;
 
   if (answer === currentQuestion.answer) {
-    answeredCorrectly.push(currentQuestion);
+    answerData.correct.push(currentQuestion.data);
+
     renderCorrect(true);
   } else {
     unansweredQuestions.push(currentQuestion);
+    answerData.incorrect.push(currentQuestion.data);
+
     renderCorrect(false);
   }
 
-  renderScore(answeredCorrectly.length, questions.length, attempts);
+  renderScore(answerData);
 
   await sleep(2000);
 
@@ -178,16 +191,22 @@ const init = () => {
   $questionContainer = document.querySelector("#question-container")!;
   $answersContainer = document.querySelector("#answers-container")!;
   $scoreContainer = document.querySelector("#score-container")!;
+  $dataContainer = document.querySelector("#data-container")!;
 };
 
 const resetState = () => {
   questions = getQuestions(
-    data.filter((capital) => capital.continent === "Europe").slice(0, 3)
+    data.filter((capital) => capital.continent === "Europe")
   );
 
-  unansweredQuestions = shuffleArray([...questions]);
-  answeredCorrectly = [];
-  attempts = 0;
+  unansweredQuestions = shuffleArray([...questions]).slice(0, 3);
+
+  answerData = {
+    correct: [],
+    incorrect: [],
+    totalQuestions: questions.length,
+    attempts: 0,
+  };
 };
 
 const start = () => {
