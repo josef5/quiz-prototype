@@ -28,12 +28,13 @@ let answerData: AnswerData = {
   attempts: 0,
 };
 let currentQuestion: Question | undefined;
-let handleAnswer: (value?: unknown) => void;
 
 let $questionContainer: Element;
 let $answersContainer: Element;
 let $scoreContainer: Element;
 let $dataContainer: Element;
+
+let handleAnswer: (value?: unknown) => void;
 
 const getNextQuestion = (array: Question[]) => {
   return array.shift();
@@ -195,11 +196,11 @@ const init = () => {
 };
 
 const resetState = () => {
-  questions = getQuestions(
-    data.filter((capital) => capital.continent === "Europe")
-  );
+  questions = shuffleArray(
+    getQuestions(data.filter((capital) => capital.continent === "Europe"))
+  ).slice(0, 3);
 
-  unansweredQuestions = shuffleArray([...questions]).slice(0, 3);
+  unansweredQuestions = [...questions];
 
   answerData = {
     correct: [],
