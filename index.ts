@@ -107,6 +107,7 @@ const renderScore = (
   const scoreText = `${correctAnswers}/${totalQuestions}`;
 
   $scoreContainer.textContent = `correct answers ${scoreText} attempts ${attempts}`;
+  $dataContainer.textContent = JSON.stringify(answerData, null, 2);
 };
 
 const renderCorrect = (correct: Boolean) => {
