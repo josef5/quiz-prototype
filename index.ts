@@ -213,8 +213,8 @@ const init = () => {
 
 const resetState = () => {
   questions = shuffleArray(
-    getQuestions(data.filter((capital) => capital.continent === "Europe"))
   ).slice(0, 3);
+      data.filter((capital) => capital.continent === Continent.Europe)
 
   unansweredQuestions = [...questions];
 
