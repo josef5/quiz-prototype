@@ -114,10 +114,11 @@ const renderButtons = (answers: string[]) => {
   const buttons = document.createDocumentFragment();
 
   for (let i = 0; i < answers.length; i++) {
+    const answer = answers[i];
     const button = document.createElement("button");
-    button.textContent = answers[i];
+    button.textContent = answer;
     button.onclick = () => {
-      handleAnswer(answers[i]);
+      handleAnswer(answer);
     };
 
     buttons.append(button);
