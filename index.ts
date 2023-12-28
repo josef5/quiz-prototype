@@ -1,14 +1,46 @@
 import { data } from "./data.js";
 
+enum Continent {
+  Africa = "Africa",
+  Europe = "Europe",
+  SouthAmerica = "South America",
+}
+
+enum GameType {
+  Knockout = "Knockout",
+  Quickfire = "Quickfire",
+  UntilAllCorrect = "Until All Correct",
+  OneQuestionEach = "One Question Each",
+}
+
+const GameConfig: Record<
+  GameType,
+  { maxAttempts?: number; maxWrong?: number }
+> = {
+  [GameType.Quickfire]: { maxAttempts: 3 },
+  [GameType.Knockout]: {
+    maxAttempts: 3,
+    maxWrong: 0,
+  },
+  [GameType.UntilAllCorrect]: {},
+  [GameType.OneQuestionEach]: {
+    maxAttempts: 3,
+  },
+};
+
 let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
+let currentQuestion: Question | undefined;
+let selectedContinent: Continent | undefined;
+let gameType: GameType;
+let gameConfig = GameConfig[GameType.Knockout];
+
 let answerData: AnswerData = {
   correct: [],
   incorrect: [],
   totalQuestions: 0,
   attempts: 0,
 };
-let currentQuestion: Question | undefined;
 
 let $questionContainer: Element;
 let $answersContainer: Element;
