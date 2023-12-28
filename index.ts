@@ -98,12 +98,28 @@ const getResponse = async () =>
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const renderStart = () => {
-  $questionContainer.textContent = "Ready?";
-  const button = document.createElement("button");
-  button.textContent = "Play";
-  button.onclick = () => start();
+  $questionContainer.textContent = "Select game type";
 
-  $answersContainer.append(button);
+  /* const button = document.createElement("button");
+  button.textContent = "Play";
+  button.onclick = () => start(); 
+
+  $answersContainer.append(button);*/
+
+  const buttons = document.createDocumentFragment();
+
+  for (const value of Object.values(GameType)) {
+    const button = document.createElement("button");
+    button.textContent = value;
+    button.onclick = () => {
+      gameConfig = GameConfig[value];
+      start();
+    };
+
+    buttons.append(button);
+  }
+
+  $answersContainer.append(buttons);
 };
 
 const renderQuestion = (question: Question, questionNumber: number) => {
