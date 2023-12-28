@@ -207,6 +207,8 @@ const init = () => {
   $answersContainer = document.querySelector("#answers-container")!;
   $scoreContainer = document.querySelector("#score-container")!;
   $dataContainer = document.querySelector("#data-container")!;
+
+  listenForEscape();
 };
 
 const resetState = () => {
@@ -232,6 +234,5 @@ const start = () => {
 window.onload = () => {
   init();
   resetState();
-  listenForEscape();
   renderStart();
 };
