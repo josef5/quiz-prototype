@@ -106,8 +106,8 @@ const renderStart = () => {
   $answersContainer.append(button);
 };
 
-const renderQuestion = (question: Question, attempts: number) => {
-  $questionContainer.textContent = `${attempts + 1}. ${question.text}`;
+const renderQuestion = (question: Question, questionNumber: number) => {
+  $questionContainer.textContent = `${questionNumber}. ${question.text}`;
 };
 
 const renderButtons = (answers: string[]) => {
@@ -158,7 +158,7 @@ const loopStart = async () => {
 
   const answerOptions = getAnswerOptions(currentQuestion, questions);
 
-  renderQuestion(currentQuestion, answerData.attempts);
+  renderQuestion(currentQuestion, answerData.attempts + 1);
   renderButtons(answerOptions);
   renderScore(answerData);
 
