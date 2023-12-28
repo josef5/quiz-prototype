@@ -203,10 +203,14 @@ const loopStart = async () => {
 
   await sleep(2000);
 
-  if (unansweredQuestions.length > 0) {
-    loopStart();
-  } else {
+  if (
+    unansweredQuestions.length === 0 ||
+    answerData.attempts >= (gameConfig.maxAttempts ?? 99999) ||
+    answerData.incorrect.length > (gameConfig.maxWrong ?? 99999)
+  ) {
     renderGameEnd();
+  } else {
+    loopStart();
   }
 };
 
@@ -229,8 +233,16 @@ const init = () => {
 
 const resetState = () => {
   questions = shuffleArray(
-  ).slice(0, 3);
+    getQuestions(
       data.filter((capital) => capital.continent === Continent.Europe)
+    )
+  );
+
+  if (gameConfig.maxAttempts) {
+    questions = questions.slice(0, gameConfig.maxAttempts);
+  }
+
+  questions = questions.slice(0, 3);
 
   unansweredQuestions = [...questions];
 
