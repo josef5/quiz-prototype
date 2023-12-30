@@ -20,7 +20,6 @@ const GameConfig: Record<
 > = {
   [GameType.Quickfire]: { maxAttempts: 3 },
   [GameType.Knockout]: {
-    maxAttempts: 3,
     maxWrong: 0,
   },
   [GameType.UntilAllCorrect]: {},
@@ -33,7 +32,7 @@ let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
 let currentQuestion: Question | undefined;
 let selectedContinent: Continent | undefined;
-let gameType: GameType;
+// let gameType: GameType;
 let gameConfig = GameConfig[GameType.Knockout];
 
 let answerData: AnswerData = {
@@ -80,15 +79,24 @@ const getAnswerOptions = (
 ) => {
   const correctAnswer = currentQuestion.answer;
 
-  const wrongAnswers = shuffleArray(
-    allQuestions
-      .filter((question) => question.answer !== correctAnswer)
-      .map((question: Question) => question.answer)
-  ).slice(0, 3);
+  // All questions except current one
+  const allAvailableQuestions = allQuestions.filter(
+    (question) => question.answer !== correctAnswer
+  );
+
+  // Remove questions that have already been answered correctly
+  const questionsFiltered = allAvailableQuestions.filter(
+    (question) =>
+      !answerData.correct.some((answer) => answer.city === question.answer)
+  );
+
+  const wrongAnswers = (
+    questionsFiltered.length >= 3 ? questionsFiltered : allAvailableQuestions
+  ).map((question: Question) => question.answer);
 
   const answers = [correctAnswer, ...wrongAnswers];
 
-  return shuffleArray(answers);
+  return shuffleArray(answers).slice(0, 3);
 };
 
 const getResponse = async () =>
