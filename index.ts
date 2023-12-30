@@ -167,10 +167,23 @@ const renderCorrect = (correct: Boolean) => {
 const renderGameEnd = () => {
   $questionContainer.innerHTML = "Finished";
 
-  const button = document.createElement("button");
-  button.textContent = "Play again";
-  button.onclick = () => start();
-  $answersContainer.replaceChildren(button);
+  const buttons = document.createDocumentFragment();
+  const button1 = document.createElement("button");
+  button1.textContent = "Play again";
+  button1.onclick = () => {
+    start();
+  };
+  buttons.append(button1);
+
+  const button2 = document.createElement("button");
+  button2.textContent = "Select a new continent";
+  button2.onclick = () => {
+    resetState();
+    renderStart();
+  };
+  buttons.append(button2);
+
+  $answersContainer.replaceChildren(buttons);
 };
 
 const loopStart = async () => {
