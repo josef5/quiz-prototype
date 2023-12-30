@@ -2,6 +2,7 @@ import { data } from "./data.js";
 
 enum Continent {
   Africa = "Africa",
+  Asia = "Asia",
   Europe = "Europe",
   SouthAmerica = "South America",
 }
@@ -98,28 +99,24 @@ const getResponse = async () =>
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const renderStart = () => {
-  $questionContainer.textContent = "Select game type";
-
-  /* const button = document.createElement("button");
-  button.textContent = "Play";
-  button.onclick = () => start(); 
-
-  $answersContainer.append(button);*/
+  $questionContainer.textContent = "Select a Continent";
 
   const buttons = document.createDocumentFragment();
 
-  for (const value of Object.values(GameType)) {
+  for (const value of Object.values(Continent)) {
     const button = document.createElement("button");
     button.textContent = value;
     button.onclick = () => {
-      gameConfig = GameConfig[value];
+      selectedContinent = value as Continent;
       start();
     };
 
     buttons.append(button);
   }
 
-  $answersContainer.append(buttons);
+  $answersContainer.replaceChildren(buttons);
+  $scoreContainer.replaceChildren();
+  $dataContainer.replaceChildren();
 };
 
 const renderQuestion = (question: Question, questionNumber: number) => {
@@ -222,6 +219,7 @@ const listenForEscape = () => {
   });
 };
 
+// NB. Called once
 const init = () => {
   $questionContainer = document.querySelector("#question-container")!;
   $answersContainer = document.querySelector("#answers-container")!;
@@ -234,7 +232,7 @@ const init = () => {
 const resetState = () => {
   questions = shuffleArray(
     getQuestions(
-      data.filter((capital) => capital.continent === Continent.Europe)
+      data.filter((capital) => capital.continent === selectedContinent)
     )
   );
 
