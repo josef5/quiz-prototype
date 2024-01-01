@@ -109,7 +109,7 @@ const getResponse = async () =>
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const renderStart = () => {
-  $questionContainer.textContent = "Select a Continent";
+  $questionContainer.textContent = "Select a continent";
 
   const buttons = document.createDocumentFragment();
 
@@ -158,11 +158,14 @@ const renderScore = (answerData: AnswerData) => {
   $dataContainer.textContent = JSON.stringify(answerData, null, 2);
 };
 
-const renderCorrect = (correct: Boolean) => {
+const renderAnswer = (question: Question, correct: boolean) => {
+  const { country, city } = question.data;
+  const correctAnswer = `The capital of ${country} is ${city}`;
+
   if (correct) {
-    $answersContainer.innerHTML = "Right answer!";
+    $answersContainer.innerHTML = `Right answer! ${correctAnswer}`;
   } else {
-    $answersContainer.innerHTML = "Wrong answer!";
+    $answersContainer.innerHTML = `Wrong answer! ${correctAnswer}`;
   }
 };
 
@@ -211,12 +214,12 @@ const loopStart = async () => {
   if (answer === currentQuestion.answer) {
     answerData.correct.push(currentQuestion.data);
 
-    renderCorrect(true);
+    renderAnswer(currentQuestion, true);
   } else {
     unansweredQuestions.push(currentQuestion);
     answerData.incorrect.push(currentQuestion.data);
 
-    renderCorrect(false);
+    renderAnswer(currentQuestion, false);
   }
 
   renderScore(answerData);
@@ -262,8 +265,6 @@ const resetState = () => {
   if (gameConfig.maxAttempts) {
     questions = questions.slice(0, gameConfig.maxAttempts);
   }
-
-  questions = questions.slice(0, 3);
 
   unansweredQuestions = [...questions];
 
