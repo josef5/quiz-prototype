@@ -32,7 +32,6 @@ let questions: Question[] = [];
 let unansweredQuestions: Question[] = [];
 let currentQuestion: Question | undefined;
 let selectedContinent: Continent | undefined;
-// let gameType: GameType;
 let gameConfig = GameConfig[GameType.Knockout];
 
 let answerData: AnswerData = {
@@ -90,13 +89,16 @@ const getAnswerOptions = (
       !answerData.correct.some((answer) => answer.city === question.answer)
   );
 
-  const wrongAnswers = (
-    questionsFiltered.length >= 3 ? questionsFiltered : allAvailableQuestions
-  ).map((question: Question) => question.answer);
+  const wrongAnswers = shuffleArray(
+    (questionsFiltered.length >= 3
+      ? questionsFiltered
+      : allAvailableQuestions
+    ).map((question: Question) => question.answer)
+  ).slice(0, 3);
 
   const answers = [correctAnswer, ...wrongAnswers];
 
-  return shuffleArray(answers).slice(0, 3);
+  return shuffleArray(answers);
 };
 
 const getResponse = async () =>
