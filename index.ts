@@ -48,10 +48,20 @@ let $dataContainer: Element;
 
 let handleAnswer: (value?: unknown) => void;
 
+/**
+ * Retrieves and removes the first question from the provided array.
+ * @param array - The array of questions.
+ * @returns The first question from the array.
+ */
 const getNextQuestion = (array: Question[]) => {
   return array.shift();
 };
 
+/**
+ * Generates a question object based on the provided capital data.
+ * @param data - The capital data containing the country and city information.
+ * @returns A question object with text, answer, and data properties.
+ */
 const getQuestion = (data: Capital) => {
   return {
     text: `What is the capital of ${data.country}?`,
@@ -60,10 +70,20 @@ const getQuestion = (data: Capital) => {
   } as Question;
 };
 
+/**
+ * Generates an array of question objects based on the provided capital data.
+ * @param data - The array of capital data containing the country and city information.
+ * @returns An array of question objects with text, answer, and data properties.
+ */
 const getQuestions = (data: Capital[]) => {
   return data.map((item) => getQuestion(item));
 };
 
+/**
+ * Shuffles the elements of the input array in place.
+ * @param array - The array to be shuffled.
+ * @returns The shuffled array.
+ */
 function shuffleArray<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -72,6 +92,12 @@ function shuffleArray<T>(array: T[]): T[] {
   return array;
 }
 
+/**
+ * Generates an array of answer options based on the current question and all available questions.
+ * @param currentQuestion - The current question object.
+ * @param allQuestions - The array of all available question objects.
+ * @returns An array of answer options including the correct answer and three random wrong answers.
+ */
 const getAnswerOptions = (
   currentQuestion: Question,
   allQuestions: Question[]
@@ -101,6 +127,10 @@ const getAnswerOptions = (
   return shuffleArray(answers);
 };
 
+/**
+ * Retrieves the response from the user asynchronously.
+ * @returns A promise that resolves with the user's response.
+ */
 const getResponse = async () =>
   new Promise((resolve, reject) => {
     handleAnswer = resolve;
@@ -108,6 +138,7 @@ const getResponse = async () =>
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Render functions only apply to vanilla js
 const renderStart = () => {
   $questionContainer.textContent = "Select a continent";
 
@@ -191,6 +222,9 @@ const renderGameEnd = () => {
   $answersContainer.replaceChildren(buttons);
 };
 
+/**
+ * Asynchronously loops through the game flow, rendering questions, handling answers, and updating the score.
+ */
 const loop = async () => {
   currentQuestion = getNextQuestion(unansweredQuestions);
 
@@ -237,6 +271,9 @@ const loop = async () => {
   }
 };
 
+/**
+ * Listens for the "Escape" key press event and handles it by calling the handleAnswer function with the value "escape".
+ */
 const listenForEscape = () => {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
@@ -245,7 +282,10 @@ const listenForEscape = () => {
   });
 };
 
-// NB. Called once
+/**
+ * Initializes the game by setting up the necessary containers and event listeners.
+ * Called once only
+ */
 const init = () => {
   $questionContainer = document.querySelector("#question-container")!;
   $answersContainer = document.querySelector("#answers-container")!;
@@ -255,6 +295,10 @@ const init = () => {
   listenForEscape();
 };
 
+/**
+ * Resets the state by shuffling the questions, setting unanswered questions, and initializing answer data.
+ * Called on each new game
+ */
 const resetState = () => {
   questions = shuffleArray(
     getQuestions(
@@ -276,11 +320,17 @@ const resetState = () => {
   };
 };
 
+/**
+ * Starts the game by resetting the state and initiating the game loop.
+ */
 const start = () => {
   resetState();
   loop();
 };
 
+/**
+ * Initializes the game by setting up the necessary containers and event listeners.
+ */
 window.onload = () => {
   init();
   resetState();
