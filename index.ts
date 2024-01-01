@@ -191,7 +191,7 @@ const renderGameEnd = () => {
   $answersContainer.replaceChildren(buttons);
 };
 
-const loopStart = async () => {
+const loop = async () => {
   currentQuestion = getNextQuestion(unansweredQuestions);
 
   if (!currentQuestion) return;
@@ -233,7 +233,7 @@ const loopStart = async () => {
   ) {
     renderGameEnd();
   } else {
-    loopStart();
+    loop();
   }
 };
 
@@ -278,7 +278,7 @@ const resetState = () => {
 
 const start = () => {
   resetState();
-  loopStart();
+  loop();
 };
 
 window.onload = () => {
